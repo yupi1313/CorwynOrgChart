@@ -209,6 +209,38 @@ class OrgChartApp {
         return 'n_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
     }
 
+    /* ---- Auto-balance tree for visual symmetry ---- */
+    balanceTree(node = this.data) {
+        if (!node.children || node.children.length === 0) return;
+        
+        // Recursively balance children first
+        node.children.forEach(child => this.balanceTree(child));
+        
+        // Sort children: heaviest subtrees toward the center
+        // This creates a visually balanced, symmetrical layout
+        const weighted = node.children.map(child => ({
+            child,
+            weight: this.countDescendants(child) + 1
+        }));
+        
+        // Sort by weight ascending
+        weighted.sort((a, b) => a.weight - b.weight);
+        
+        // Interleave: place heaviest in center, lighter on edges
+        const balanced = [];
+        let left = true;
+        for (let i = weighted.length - 1; i >= 0; i--) {
+            if (left) {
+                balanced.push(weighted[i].child);
+            } else {
+                balanced.unshift(weighted[i].child);
+            }
+            left = !left;
+        }
+        
+        node.children = balanced;
+    }
+
     /* ---- Layout Engine ---- */
     layoutTree(node, depth = 0) {
         const nodeW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--node-width')) || 180;
@@ -596,7 +628,9 @@ class OrgChartApp {
             if (!target.children) target.children = [];
             target.children.push(copy);
 
+            this.balanceTree();
             this.render();
+            this.fitToView();
             this.showToast('Node moved successfully');
         });
 
@@ -701,7 +735,9 @@ class OrgChartApp {
         parent.children.push(newNode);
 
         this.collapsedNodes.delete(parentId);
+        this.balanceTree();
         this.render();
+        this.fitToView();
         this.openEdit(newNode.id, true);
         this.showToast('Child node added');
     }
@@ -724,7 +760,9 @@ class OrgChartApp {
         const idx = parent.children.findIndex(c => c.id === nodeId);
         parent.children.splice(idx + 1, 0, newNode);
 
+        this.balanceTree();
         this.render();
+        this.fitToView();
         this.openEdit(newNode.id, true);
         this.showToast('Sibling node added');
     }
@@ -742,7 +780,9 @@ class OrgChartApp {
 
         this.removeNode(nodeId);
         this.selectedNodeId = null;
+        this.balanceTree();
         this.render();
+        this.fitToView();
         this.showToast('Node deleted');
     }
 
@@ -957,7 +997,9 @@ class OrgChartApp {
         parent.children.push(newNode);
 
         this.collapsedNodes.delete(parentId);
+        this.balanceTree();
         this.render();
+        this.fitToView();
         this.openEdit(newNode.id, true);
         this.showToast('Team node added');
     }
