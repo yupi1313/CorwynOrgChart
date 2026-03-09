@@ -702,7 +702,7 @@ class OrgChartApp {
 
         this.collapsedNodes.delete(parentId);
         this.render();
-        this.openEdit(newNode.id);
+        this.openEdit(newNode.id, true);
         this.showToast('Child node added');
     }
 
@@ -725,7 +725,7 @@ class OrgChartApp {
         parent.children.splice(idx + 1, 0, newNode);
 
         this.render();
-        this.openEdit(newNode.id);
+        this.openEdit(newNode.id, true);
         this.showToast('Sibling node added');
     }
 
@@ -756,9 +756,15 @@ class OrgChartApp {
     }
 
     /* ---- Edit Modal ---- */
-    openEdit(nodeId) {
+    async openEdit(nodeId, skipPasscode = false) {
         const node = this.findNode(nodeId);
         if (!node) return;
+
+        if (!skipPasscode) {
+            const ok = await this.showConfirm('Edit Node', `Enter passcode to edit "${node.name}".`, 'Edit');
+            if (!ok) return;
+        }
+
         this.selectedNodeId = nodeId;
 
         document.getElementById('edit-name').value = node.name;
@@ -952,7 +958,7 @@ class OrgChartApp {
 
         this.collapsedNodes.delete(parentId);
         this.render();
-        this.openEdit(newNode.id);
+        this.openEdit(newNode.id, true);
         this.showToast('Team node added');
     }
 
