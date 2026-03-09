@@ -898,3 +898,30 @@ body {
     from { opacity: 1; transform: translateY(0); }
     to { opacity: 0; transform: translateY(20px); }
 }
+
+
+/* ========================================
+   CONFIRM MODAL
+   ======================================== */
+.confirm-modal-content {
+    width: 340px;
+    text-align: center;
+}
+
+.confirm-message {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 4px;
+}
+
+.danger-btn {
+    background: var(--danger) !important;
+    color: #fff !important;
+    border-color: var(--danger) !important;
+}
+
+.danger-btn:hover {
+    background: #ff7a82 !important;
+    border-color: #ff7a82 !important;
+}

@@ -702,7 +702,7 @@ class OrgChartApp {
         this.showToast('Sibling node added');
     }
 
-    deleteNode(nodeId) {
+    async deleteNode(nodeId) {
         if (nodeId === this.data.id) return;
         const node = this.findNode(nodeId);
         const childCount = this.countDescendants(node);
@@ -710,7 +710,8 @@ class OrgChartApp {
             ? `Delete "${node.name}" and ${childCount} descendant(s)?`
             : `Delete "${node.name}"?`;
 
-        if (!confirm(msg)) return;
+        const ok = await this.showConfirm('Delete Node', msg, 'Delete');
+        if (!ok) return;
 
         this.removeNode(nodeId);
         this.selectedNodeId = null;
@@ -823,8 +824,9 @@ class OrgChartApp {
         this.showToast('Chart exported as JSON');
     }
 
-    resetChart() {
-        if (!confirm('Reset the chart to the original structure? All edits will be lost.')) return;
+    async resetChart() {
+        const ok = await this.showConfirm('Reset Chart', 'Reset the chart to the original structure? All edits will be lost.', 'Reset');
+        if (!ok) return;
         localStorage.removeItem('orgchart_data');
         localStorage.removeItem('orgchart_collapsed');
         this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
@@ -887,6 +889,32 @@ class OrgChartApp {
         this.render();
         this.openEdit(newNode.id);
         this.showToast('Team node added');
+    }
+
+    /* ---- Custom Confirm Dialog ---- */
+    showConfirm(title, message, okLabel = 'Delete') {
+        return new Promise((resolve) => {
+            const modal = document.getElementById('confirm-modal');
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-message').textContent = message;
+            const okBtn = document.getElementById('confirm-ok');
+            okBtn.textContent = okLabel;
+            modal.classList.remove('hidden');
+
+            const cleanup = () => {
+                modal.classList.add('hidden');
+                okBtn.removeEventListener('click', onOk);
+                document.getElementById('confirm-cancel').removeEventListener('click', onCancel);
+                modal.querySelector('.modal-backdrop').removeEventListener('click', onCancel);
+            };
+
+            const onOk = () => { cleanup(); resolve(true); };
+            const onCancel = () => { cleanup(); resolve(false); };
+
+            okBtn.addEventListener('click', onOk);
+            document.getElementById('confirm-cancel').addEventListener('click', onCancel);
+            modal.querySelector('.modal-backdrop').addEventListener('click', onCancel);
+        });
     }
 
     /* ---- Helpers ---- */
