@@ -35,9 +35,7 @@ const DEFAULT_DATA = {
             name: "Prokop",
             title: "Group Head of Quants",
             children: [
-                { id: "5a", name: "TBD", title: "Gadget Quant", children: [] },
-                { id: "5b", name: "TBD", title: "Gadget Head of Quants", children: [] },
-                { id: "5c", name: "TBD", title: "Gadget Quant", children: [] }
+                { id: "5a", name: "Quants Team", title: "Team", isTeam: true, children: [] }
             ]
         },
         {
