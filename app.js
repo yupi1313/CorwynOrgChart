@@ -27,7 +27,7 @@ const DEFAULT_DATA = {
             name: "Vendula",
             title: "Group CMO",
             children: [
-                { id: "4a", name: "Quant Team(s)", title: "Team", isTeam: true, children: [] }
+                { id: "4a", name: "Marketing Team(s)", title: "Team", isTeam: true, children: [] }
             ]
         },
         {
