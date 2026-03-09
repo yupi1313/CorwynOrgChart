@@ -128,6 +128,11 @@
         <div class="modal-content confirm-modal-content">
             <h2 id="confirm-title">Confirm</h2>
             <p id="confirm-message" class="confirm-message"></p>
+            <div class="form-group" style="margin-top:16px">
+                <label for="confirm-passcode">Enter passcode</label>
+                <input type="password" id="confirm-passcode" placeholder="4-digit code" maxlength="4" inputmode="numeric" autocomplete="off">
+                <div id="confirm-error" class="passcode-error"></div>
+            </div>
             <div class="modal-actions">
                 <button id="confirm-cancel" class="action-btn">Cancel</button>
                 <button id="confirm-ok" class="action-btn danger-btn">Delete</button>

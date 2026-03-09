@@ -991,3 +991,11 @@ body {
 .export-menu button:hover {
     background: rgba(255, 255, 255, 0.06);
 }
+
+/* Passcode error */
+.passcode-error {
+    color: var(--danger);
+    font-size: 12px;
+    margin-top: 6px;
+    min-height: 16px;
+}

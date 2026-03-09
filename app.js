@@ -684,7 +684,10 @@ class OrgChartApp {
     }
 
     /* ---- Node Operations ---- */
-    addChild(parentId) {
+    async addChild(parentId) {
+        const ok = await this.showConfirm('Add Person', 'Enter passcode to add a new person.', 'Add');
+        if (!ok) return;
+
         const parent = this.findNode(parentId);
         if (!parent) return;
         if (!parent.children) parent.children = [];
@@ -697,15 +700,18 @@ class OrgChartApp {
         };
         parent.children.push(newNode);
 
-        // Expand parent if collapsed
         this.collapsedNodes.delete(parentId);
         this.render();
         this.openEdit(newNode.id);
         this.showToast('Child node added');
     }
 
-    addSibling(nodeId) {
+    async addSibling(nodeId) {
         if (nodeId === this.data.id) return;
+
+        const ok = await this.showConfirm('Add Sibling', 'Enter passcode to add a sibling node.', 'Add');
+        if (!ok) return;
+
         const parent = this.findParent(nodeId);
         if (!parent) return;
 
@@ -927,7 +933,10 @@ class OrgChartApp {
     }
 
     /* ---- Add Team (as child) ---- */
-    addTeamChild(parentId) {
+    async addTeamChild(parentId) {
+        const ok = await this.showConfirm('Add Team', 'Enter passcode to add a new team.', 'Add');
+        if (!ok) return;
+
         const parent = this.findNode(parentId);
         if (!parent) return;
         if (!parent.children) parent.children = [];
@@ -954,22 +963,45 @@ class OrgChartApp {
             document.getElementById('confirm-title').textContent = title;
             document.getElementById('confirm-message').textContent = message;
             const okBtn = document.getElementById('confirm-ok');
+            const passcodeInput = document.getElementById('confirm-passcode');
+            const errorEl = document.getElementById('confirm-error');
             okBtn.textContent = okLabel;
+            passcodeInput.value = '';
+            errorEl.textContent = '';
             modal.classList.remove('hidden');
+            setTimeout(() => passcodeInput.focus(), 100);
 
             const cleanup = () => {
                 modal.classList.add('hidden');
                 okBtn.removeEventListener('click', onOk);
-                document.getElementById('confirm-cancel').removeEventListener('click', onCancel);
-                modal.querySelector('.modal-backdrop').removeEventListener('click', onCancel);
+                cancelBtn.removeEventListener('click', onCancel);
+                backdrop.removeEventListener('click', onCancel);
+                passcodeInput.removeEventListener('keydown', onKey);
             };
 
-            const onOk = () => { cleanup(); resolve(true); };
+            const cancelBtn = document.getElementById('confirm-cancel');
+            const backdrop = modal.querySelector('.modal-backdrop');
+
+            const onOk = () => {
+                if (passcodeInput.value !== '2222') {
+                    errorEl.textContent = 'Incorrect passcode';
+                    passcodeInput.value = '';
+                    passcodeInput.focus();
+                    return;
+                }
+                cleanup();
+                resolve(true);
+            };
             const onCancel = () => { cleanup(); resolve(false); };
+            const onKey = (e) => {
+                if (e.key === 'Enter') onOk();
+                if (e.key === 'Escape') onCancel();
+            };
 
             okBtn.addEventListener('click', onOk);
-            document.getElementById('confirm-cancel').addEventListener('click', onCancel);
-            modal.querySelector('.modal-backdrop').addEventListener('click', onCancel);
+            cancelBtn.addEventListener('click', onCancel);
+            backdrop.addEventListener('click', onCancel);
+            passcodeInput.addEventListener('keydown', onKey);
         });
     }
 
