@@ -523,6 +523,7 @@ class OrgChartApp {
         // Drag & Drop
         this.chartEl.addEventListener('dragstart', (e) => {
             const card = e.target.closest('.node-card');
+            if (e.target.closest(".node-action-btn")) { e.preventDefault(); return; }
             if (!card) return;
             const id = card.dataset.id;
             if (id === this.data.id) { e.preventDefault(); return; }
