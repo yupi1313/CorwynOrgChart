@@ -378,9 +378,10 @@ class OrgChartApp {
 
             const cx = childPos.x + childPos.w / 2;
             const cy = childPos.y;
-            const midY = py + (cy - py) / 2;
+            const midY = py + (cy - py) * 0.5;
 
-            const path = `M ${px} ${py} L ${px} ${midY} L ${cx} ${midY} L ${cx} ${cy}`;
+            // Smooth cubic bezier curve
+            const path = `M ${px} ${py} C ${px} ${midY}, ${cx} ${midY}, ${cx} ${cy}`;
 
             // Glow layer
             const glow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -505,6 +506,7 @@ class OrgChartApp {
                 case 'edit': this.openEdit(id); break;
                 case 'add-child': this.addChild(id); break;
                 case 'add-sibling': this.addSibling(id); break;
+                case 'add-team': this.addTeamChild(id); break;
                 case 'delete': this.deleteNode(id); break;
             }
         });
@@ -593,8 +595,41 @@ class OrgChartApp {
             if (e.key === 'Escape') {
                 this.hideContextMenu();
                 this.closeEdit();
+                // Clear search on Escape
+                const searchInput = document.getElementById('search-input');
+                if (searchInput && searchInput.value) {
+                    searchInput.value = '';
+                    this.clearSearch();
+                }
             }
         });
+
+        // Search
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.trim().toLowerCase();
+                if (!query) {
+                    this.clearSearch();
+                    return;
+                }
+                this.searchNodes(query);
+            });
+        }
+
+        // Person/Team toggle in edit modal
+        const togglePerson = document.getElementById('toggle-person');
+        const toggleTeam = document.getElementById('toggle-team');
+        if (togglePerson && toggleTeam) {
+            togglePerson.addEventListener('click', () => {
+                togglePerson.classList.add('active');
+                toggleTeam.classList.remove('active');
+            });
+            toggleTeam.addEventListener('click', () => {
+                toggleTeam.classList.add('active');
+                togglePerson.classList.remove('active');
+            });
+        }
     }
 
     /* ---- Pan & Zoom ---- */
@@ -703,6 +738,19 @@ class OrgChartApp {
         this.editModal.classList.remove('hidden');
         this.editModal.dataset.nodeId = nodeId;
 
+        // Set person/team toggle
+        const togglePerson = document.getElementById('toggle-person');
+        const toggleTeam = document.getElementById('toggle-team');
+        if (togglePerson && toggleTeam) {
+            if (node.isTeam) {
+                toggleTeam.classList.add('active');
+                togglePerson.classList.remove('active');
+            } else {
+                togglePerson.classList.add('active');
+                toggleTeam.classList.remove('active');
+            }
+        }
+
         setTimeout(() => document.getElementById('edit-name').focus(), 100);
     }
 
@@ -719,6 +767,12 @@ class OrgChartApp {
 
         node.name = document.getElementById('edit-name').value.trim() || 'Unnamed';
         node.title = document.getElementById('edit-title').value.trim();
+
+        // Check person/team toggle
+        const toggleTeam = document.getElementById('toggle-team');
+        if (toggleTeam) {
+            node.isTeam = toggleTeam.classList.contains('active');
+        }
 
         this.closeEdit();
         this.showToast('Node updated');
@@ -779,6 +833,60 @@ class OrgChartApp {
         this.render();
         this.fitToView();
         this.showToast('Chart reset to original');
+    }
+
+    /* ---- Search ---- */
+    searchNodes(query) {
+        const allCards = document.querySelectorAll('.node-card');
+        const matchIds = new Set();
+
+        // Find matching nodes
+        const findMatches = (node) => {
+            const nameMatch = node.name.toLowerCase().includes(query);
+            const titleMatch = (node.title || '').toLowerCase().includes(query);
+            if (nameMatch || titleMatch) matchIds.add(node.id);
+            (node.children || []).forEach(c => findMatches(c));
+        };
+        findMatches(this.data);
+
+        // Apply visual feedback
+        allCards.forEach(card => {
+            const id = card.dataset.id;
+            if (matchIds.has(id)) {
+                card.classList.add('search-highlight');
+                card.classList.remove('search-dimmed');
+            } else {
+                card.classList.add('search-dimmed');
+                card.classList.remove('search-highlight');
+            }
+        });
+    }
+
+    clearSearch() {
+        document.querySelectorAll('.node-card').forEach(card => {
+            card.classList.remove('search-dimmed', 'search-highlight');
+        });
+    }
+
+    /* ---- Add Team (as child) ---- */
+    addTeamChild(parentId) {
+        const parent = this.findNode(parentId);
+        if (!parent) return;
+        if (!parent.children) parent.children = [];
+
+        const newNode = {
+            id: this.generateId(),
+            name: 'New Team',
+            title: 'Team',
+            isTeam: true,
+            children: []
+        };
+        parent.children.push(newNode);
+
+        this.collapsedNodes.delete(parentId);
+        this.render();
+        this.openEdit(newNode.id);
+        this.showToast('Team node added');
     }
 
     /* ---- Helpers ---- */
