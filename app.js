@@ -214,7 +214,7 @@ class OrgChartApp {
         const nodeW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--node-width')) || 180;
         const gapX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--node-gap-x')) || 24;
         const gapY = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--node-gap-y')) || 70;
-        const cardH = 100;
+        const cardH = 95;
 
         const computeWidth = (n) => {
             const children = (n.children || []);
