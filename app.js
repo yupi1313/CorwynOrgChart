@@ -101,7 +101,6 @@ const DEFAULT_DATA = {
                                 { id: "6e2c", name: "Matus Mlich", title: "Engineer", children: [] }
                             ]
                         },
-                        { id: "6e3", name: "Prokop Simon", title: "Tech Lead - Quants", children: [] },
                         { id: "6e4", name: "Steven Acreman", title: "Team Lead - Infra", children: [] },
                         {
                             id: "6e5",
