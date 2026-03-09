@@ -42,79 +42,64 @@ const DEFAULT_DATA = {
         },
         {
             id: "6",
-            name: "Alexander Chernavin",
+            name: "Alexander",
             title: "COO",
             children: [
                 {
                     id: "6a",
-                    name: "Andrea Spiteri",
-                    title: "Product Manager",
+                    name: "Nedik",
+                    title: "CTO",
                     children: [
-                        { id: "6a1", name: "Dunja Kozić", title: "Product Manager", children: [] },
-                        { id: "6a2", name: "Alex Cartier", title: "Product Manager", children: [] },
-                        { id: "6a3", name: "Martin Dostal", title: "Product Manager", children: [] },
-                        { id: "6a4", name: "Niko Krassikov", title: "UX/UI Designer", children: [] }
+                        { id: "6a1", name: "Development Team", title: "Team", isTeam: true, children: [] },
+                        { id: "6a2", name: "QA Team", title: "Team", isTeam: true, children: [] },
+                        { id: "6a3", name: "Infrastructure Team", title: "Team", isTeam: true, children: [] },
+                        { id: "6a4", name: "Product Team", title: "Team", isTeam: true, children: [] },
+                        { id: "6a5", name: "Product Design Team", title: "Team", isTeam: true, children: [] }
                     ]
                 },
-                { id: "6b", name: "Ivan Kostyuchenko", title: "Marketing Manager", children: [] },
-                { id: "6c", name: "Angie Regalado", title: "HR Manager", children: [] },
-                { id: "6d", name: "Vladyslav Shestachenko", title: "Trading Manager", children: [] },
+                { id: "6b", name: "Andrea", title: "Product", children: [] },
                 {
-                    id: "6e",
-                    name: "Nedda Kaltcheva",
-                    title: "Chief Tech Officer",
+                    id: "6c",
+                    name: "Ivan Kornyuchenko",
+                    title: "Marketing Manager",
                     children: [
-                        {
-                            id: "6e1",
-                            name: "Václav Ryška",
-                            title: "Engineering Manager - Core",
-                            children: [
-                                {
-                                    id: "6e1a",
-                                    name: "Martin Eliáš",
-                                    title: "Tech Lead",
-                                    children: [
-                                        { id: "6e1a1", name: "Aayush Bhaglal", title: "Engineer", children: [] },
-                                        { id: "6e1a2", name: "Chandra Shekhar", title: "Engineer", children: [] },
-                                        { id: "6e1a3", name: "David Zirnsák", title: "Engineer", children: [] }
-                                    ]
-                                },
-                                {
-                                    id: "6e1b",
-                                    name: "Pavel Macháň",
-                                    title: "Tech Lead",
-                                    children: [
-                                        { id: "6e1b1", name: "Deavyansh Gautam", title: "Engineer", children: [] },
-                                        { id: "6e1b2", name: "Parath Singh", title: "Engineer", children: [] },
-                                        { id: "6e1b3", name: "Vishnu Sureshkumar", title: "Engineer", children: [] }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            id: "6e2",
-                            name: "Michal Kelčík",
-                            title: "Tech Lead - Iframe",
-                            children: [
-                                { id: "6e2a", name: "Aliaksei Lizurchyk", title: "Engineer", children: [] },
-                                { id: "6e2b", name: "Eugeniusz Kuryło", title: "Engineer", children: [] },
-                                { id: "6e2c", name: "Matus Mlich", title: "Engineer", children: [] }
-                            ]
-                        },
-                        { id: "6e3", name: "Prokop Simon", title: "Tech Lead - Quants", children: [] },
-                        { id: "6e4", name: "Steven Acreman", title: "Team Lead - Infra", children: [] },
-                        {
-                            id: "6e5",
-                            name: "Teodor Kirkov",
-                            title: "Team Lead - QA",
-                            children: [
-                                { id: "6e5a", name: "Vitalii Dziubenko", title: "QA Engineer", children: [] }
-                            ]
-                        },
-                        { id: "6e6", name: "Huseyn", title: "Engineer", children: [] },
-                        { id: "6e7", name: "Pavel Černý", title: "Engineer", children: [] }
+                        { id: "6c1", name: "Marketing Team", title: "Team", isTeam: true, children: [] }
                     ]
-                }
+                },
+                {
+                    id: "6d",
+                    name: "Head of Sales",
+                    title: "",
+                    children: [
+                        { id: "6d1", name: "Sales Team", title: "Team", isTeam: true, children: [] },
+                        {
+                            id: "6d2",
+                            name: "New Employee",
+                            title: "Sports Analyst Team Lead",
+                            children: [
+                                { id: "6d2a", name: "Tracking Analyst Team", title: "Team", isTeam: true, children: [] }
+                            ]
+                        },
+                        {
+                            id: "6d3",
+                            name: "New Employee",
+                            title: "Risk Analyst Team Lead",
+                            children: [
+                                { id: "6d3a", name: "Risk Team", title: "Team", isTeam: true, children: [] }
+                            ]
+                        },
+                        {
+                            id: "6d4",
+                            name: "New Employee",
+                            title: "Trading Team Lead",
+                            children: [
+                                { id: "6d4a", name: "Trading Team", title: "Team", isTeam: true, children: [] }
+                            ]
+                        }
+                    ]
+                },
+                { id: "6e", name: "Trading Ops", title: "", children: [] },
+                { id: "6f", name: "Customer Success Team", title: "", children: [] }
             ]
         }
     ]
