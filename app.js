@@ -277,6 +277,27 @@ class OrgChartApp {
         this.saveData();
     }
 
+
+    /* ---- Team Color Detection ---- */
+    getTeamGroup(nodeId) {
+        // CEO level
+        if (nodeId === "1") return "ceo";
+        // Direct CEO reports
+        if (nodeId === "2" || nodeId.startsWith("2")) return "hr";
+        if (nodeId === "3" || nodeId.startsWith("3")) return "cfo";
+        if (nodeId === "4" || nodeId.startsWith("4")) return "cmo";
+        if (nodeId === "5" || nodeId.startsWith("5")) return "quants";
+        // COO
+        if (nodeId === "6") return "coo";
+        // Product vertical (Andrea Spiteri)
+        if (nodeId === "6a" || nodeId.startsWith("6a")) return "product";
+        // Operations (Ivan, Angie, Vladyslav)
+        if (nodeId === "6b" || nodeId === "6c" || nodeId === "6d") return "operations";
+        // Tech vertical (Nedda)
+        if (nodeId === "6e" || nodeId.startsWith("6e")) return "tech";
+        return "coo";
+    }
+
     renderNode(node) {
         const pos = this.nodePositions.get(node.id);
         if (!pos) return;
@@ -297,7 +318,7 @@ class OrgChartApp {
         const isCollapsed = this.collapsedNodes.has(node.id);
 
         el.innerHTML = `
-            <div class="node-card${this.selectedNodeId === node.id ? ' selected' : ''}" 
+            <div class="node-card${this.selectedNodeId === node.id ? ' selected' : ''}" data-team="${this.getTeamGroup(node.id)}" 
                  draggable="true" data-id="${node.id}">
                 <div class="node-actions">
                     <button class="node-action-btn add-btn" data-action="add-child" data-id="${node.id}" title="Add child">
