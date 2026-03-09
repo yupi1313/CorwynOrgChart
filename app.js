@@ -214,7 +214,7 @@ class OrgChartApp {
         const nodeW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--node-width')) || 180;
         const gapX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--node-gap-x')) || 24;
         const gapY = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--node-gap-y')) || 70;
-        const cardH = 90;
+        const cardH = 100;
 
         const computeWidth = (n) => {
             const children = (n.children || []);
@@ -330,7 +330,8 @@ class OrgChartApp {
                     </button>` : ''}
                 </div>
                 <div class="${avatarClass}">${avatarIcon}</div>
-                <div class="node-name">${this.escapeHtml(node.name)}</div>
+                <div class="node-name">${this.escapeHtml(this.getFirstName(node.name))}</div>
+                <div class="node-surname">${this.escapeHtml(this.getLastName(node.name))}</div>
                 ${node.title ? `<div class="node-title">${this.escapeHtml(node.title)}</div>` : ''}
             </div>
             ${hasChildren ? `
@@ -973,6 +974,17 @@ class OrgChartApp {
     }
 
     /* ---- Helpers ---- */
+    getFirstName(name) {
+        const parts = name.trim().split(/\s+/);
+        return parts[0] || name;
+    }
+
+    getLastName(name) {
+        const parts = name.trim().split(/\s+/);
+        if (parts.length <= 1) return '';
+        return parts.slice(1).join(' ');
+    }
+
     getInitials(name) {
         return name.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2);
     }
