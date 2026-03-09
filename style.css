@@ -925,3 +925,52 @@ body {
     background: #ff7a82 !important;
     border-color: #ff7a82 !important;
 }
+
+
+/* ========================================
+   EXPORT DROPDOWN
+   ======================================== */
+.export-dropdown {
+    position: relative;
+}
+
+.export-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 170px;
+    background: rgba(22, 25, 40, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-hover);
+    border-radius: var(--radius-md);
+    padding: 4px;
+    box-shadow: var(--shadow-lg);
+    z-index: 200;
+    animation: modalIn 0.15s ease-out;
+}
+
+.export-menu.hidden {
+    display: none;
+}
+
+.export-menu button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: var(--font);
+    font-weight: 400;
+    color: var(--text-primary);
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.export-menu button:hover {
+    background: rgba(255, 255, 255, 0.06);
+}

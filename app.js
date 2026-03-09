@@ -452,7 +452,27 @@ class OrgChartApp {
         document.getElementById('btn-fit').addEventListener('click', () => this.fitToView());
 
         // Actions
-        document.getElementById('btn-export').addEventListener('click', () => this.exportJSON());
+        document.getElementById('btn-export').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const menu = document.getElementById('export-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        document.getElementById('export-menu').addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const type = btn.dataset.export;
+            document.getElementById('export-menu').classList.add('hidden');
+            if (type === 'json') this.exportJSON();
+            if (type === 'png') this.exportPNG();
+        });
+
+        // Close export menu on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.export-dropdown')) {
+                document.getElementById('export-menu').classList.add('hidden');
+            }
+        });
         document.getElementById('btn-reset').addEventListener('click', () => this.resetChart());
 
         // Node events (delegated)
@@ -822,6 +842,41 @@ class OrgChartApp {
         a.click();
         URL.revokeObjectURL(url);
         this.showToast('Chart exported as JSON');
+    }
+
+    async exportPNG() {
+        this.showToast('Generating image...');
+        
+        // Temporarily hide action buttons and collapse toggles
+        const style = document.createElement('style');
+        style.id = 'export-style';
+        style.textContent = '.node-actions, .collapse-toggle { display: none !important; } .node-card { background: #1c1f2e !important; }';
+        document.head.appendChild(style);
+
+        try {
+            const chart = document.getElementById('canvas');
+            const canvas = await html2canvas(chart, {
+                backgroundColor: '#0a0c14',
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                onclone: (doc) => {
+                    const clonedCanvas = doc.getElementById('canvas');
+                    clonedCanvas.style.transform = 'none';
+                }
+            });
+            
+            const link = document.createElement('a');
+            link.download = 'orgchart.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            this.showToast('Chart exported as PNG');
+        } catch (err) {
+            console.error('PNG export failed:', err);
+            this.showToast('PNG export failed');
+        } finally {
+            document.getElementById('export-style')?.remove();
+        }
     }
 
     async resetChart() {
